@@ -1,0 +1,9 @@
+.vs
+node_modules
+\[lua\]
+.idea
+
+# But include specific packages
+!/node_modules/typescript-to-lua/
+!/node_modules/mtasa-lua-types/
+!/node_modules/mtasa-lua-utils/

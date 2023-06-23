@@ -1,0 +1,25 @@
+{
+    "name": "mandela-main",
+    "scripts": {
+        "build": "mtasa-lua-utils build",
+        "eslint": "eslint --max-warnings=0 .",
+        "prettier": "prettier --check .",
+        "prettier-fix": "prettier --write .",
+        "new-resource": "mtasa-lua-utils new-resource",
+        "watch": "nodemon --watch src --ext js,mjs,json,ts,fx --exec npm run build"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.30.0",
+        "@typescript-eslint/parser": "^4.30.0",
+        "eslint": "^7.32.0",
+        "lua-types": "^2.12.1",
+        "mtasa-lua-types": "^1.1.0",
+        "mtasa-lua-utils": "^1.0.3",
+        "prettier": "^2.3.2",
+        "typescript": "~4.5.2",
+        "typescript-to-lua": "~1.3.4"
+    },
+    "dependencies": {
+        "nodemon": "^2.0.22"
+    }
+}

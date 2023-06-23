@@ -1,0 +1,127 @@
+info:
+    name: sh-main
+    type: script
+
+compilerConfig:
+    srcDir: sh-main
+
+minMtaVersion:
+    client: 1.5.2-9.07903
+    server: 1.5.2-9.07903
+
+files:
+  # Objects
+  # sausages
+    - src: objects/data/sausages/sausages.txd
+    - src: objects/data/sausages/sausages.dff
+    - src: objects/data/sausages/sausages.col
+  # ball
+    - src: objects/data/ball/ball.txd
+    - src: objects/data/ball/ball.dff
+    - src: objects/data/ball/ball.col
+
+scripts:
+  # Settings
+    - src: settings/main.ts
+      type: shared
+      cache: false
+
+  # Lobby
+    - src: menu/shared.ts
+      type: shared
+      cache: false
+    - src: menu/lobby.ts
+      type: client
+      cache: false
+    - src: menu/server.ts
+      type: server
+
+  # Utils
+    - src: utils/angleLerp.ts
+      type: shared
+      cache: false
+    - src: utils/rotate.ts
+      type: client
+      cache: false
+    - src: utils/isMouseIn.ts
+      type: client
+      cache: false
+    - src: utils/randomString.ts
+      type: shared
+      cache: false
+    - src: utils/elementOffset.ts
+      type: shared
+      cache: false
+    - src: utils/clamp.ts
+      type: shared
+      cache: false
+    - src: utils/moment.ts
+      type: shared
+      cache: false
+    - src: utils/vectorCompare.ts
+      type: shared
+      cache: false
+    - src: utils/vectorLerp.ts
+      type: shared
+      cache: false
+    - src: utils/reflect.ts
+      type: shared
+      cache: false
+
+  # Objects
+    - src: objects/shared.ts
+      type: shared
+      cache: false
+    - src: objects/main.ts
+      type: client
+      cache: false
+    - src: objects/physics.ts
+      type: client
+      cache: false
+    - src: objects/server.ts
+      type: server
+
+  # Game
+    - src: game/settings.ts
+      type: client
+      cache: false
+    - src: game/save.ts
+      type: client
+      cache: false
+    - src: game/main.ts
+      type: client
+      cache: false
+
+  # World
+    - src: world/test.ts
+      type: server
+
+  # Camera
+    - src: camera/main.ts
+      type: client
+      cache: false
+
+  # Notifications
+    - src: notifications/shared.ts
+      type: shared
+      cache: false
+    - src: notifications/client.ts
+      type: client
+      cache: false
+    - src: notifications/server.ts
+      type: server
+
+  # Session
+    - src: session/shared.ts
+      type: shared
+      cache: false
+    - src: session/server.ts
+      type: server
+    - src: session/client.ts
+      type: client
+      cache: false
+
+  # Main
+    - src: main.ts
+      type: client
+      cache: false
