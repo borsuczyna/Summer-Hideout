@@ -1,4 +1,4 @@
-import { Event, EventNames, MTASAObject, Player, addEvent, addEventHandler, createTrayNotification, getElementData, getElementPosition, getElementRotation, getTickCount, guiGetScreenSize, iprint, isMTAWindowFocused, localPlayer, processLineOfSight, removeEventHandler, resourceRoot, root, setCursorPosition, setElementPosition, toggleControl, triggerServerEvent } from "mtasa-lua-types/client/mtasa";
+import { Event, EventNames, MTASAObject, Player, addEvent, addEventHandler, attachElements, createObject, createTrayNotification, destroyElement, getElementData, getElementMatrix, getElementPosition, getElementRotation, getTickCount, guiGetScreenSize, iprint, isMTAWindowFocused, localPlayer, processLineOfSight, removeEventHandler, resourceRoot, root, setCursorPosition, setElementMatrix, setElementPosition, toggleControl, triggerServerEvent } from "mtasa-lua-types/client/mtasa";
 import { Camera } from "../camera/main";
 import { Settings } from "./settings";
 import { Session } from "../session/client";
@@ -6,6 +6,7 @@ import { showNotification } from "../notifications/client";
 import { Settings as GlobalSettings } from "../settings/main";
 import { rotate } from "../utils/rotate";
 import { getPhysicsObjectRotation } from "../objects/physics";
+import { Vector3 } from "mtasa-lua-types/shared/vector";
 
 addEvent('session:join', true);
 addEvent('session:start', true);
@@ -119,6 +120,7 @@ export class Game {
                     if(!object || object.beingHold) return;
 
                     let [rx, ry, rz] = getPhysicsObjectRotation(hitElement);
+                    rz -= this.camera.yaw;
                     triggerServerEvent('session:grabObject', resourceRoot, this.session.code, object, [rx, ry, rz]);
                 }
             }

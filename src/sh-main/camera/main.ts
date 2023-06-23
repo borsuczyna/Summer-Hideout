@@ -96,7 +96,7 @@ export class Camera {
         setElementPosition(player.holdingObject.object, ox, oy, oz);
         
         let [rx, ry, rz] = player.holdingObject.holdRotation!;
-        setElementRotation(player.holdingObject.object, rx, ry, rz);
+        setElementRotation(player.holdingObject.object, rx, ry, rz + this.yaw);
     }
 
     update(dt: number) {

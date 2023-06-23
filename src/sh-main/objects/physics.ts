@@ -1,4 +1,4 @@
-import { EventNames, addEventHandler, createObject, destroyElement, dxDrawLine3D, getElementAngularVelocity, getElementBoundingBox, getElementMatrix, getElementRotation, getElementType, getTickCount, processLineOfSight, root, setElementAngularVelocity, setElementMatrix, setElementVelocity } from "mtasa-lua-types/client/mtasa";
+import { EventNames, addEventHandler, createObject, destroyElement, dxDrawLine3D, getElementAngularVelocity, getElementBoundingBox, getElementMatrix, getElementRotation, getElementType, getElementVelocity, getTickCount, processLineOfSight, root, setElementAngularVelocity, setElementMatrix, setElementVelocity } from "mtasa-lua-types/client/mtasa";
 import { Element, MTASAObject, Vector3 } from "mtasa-lua-types/client/structure";
 import { getPositionFromElementOffset, getPositionFromElementOffsetVector } from "../utils/elementOffset";
 import { Settings } from "../settings/main";
@@ -41,6 +41,10 @@ function processLine(start: Vector3, target: Vector3, ignored: MTASAObject): [bo
 function applyWorldHitAngularVelocitty(object: MTASAObject, x: number, y: number, z: number) {
     let [ax, ay, az] = getElementAngularVelocity(object);
     setElementAngularVelocity(object, ax - y, ay + x, az);
+}
+
+function doesObjectUsesPhysics(object: MTASAObject) {
+    return physicsObjects.find(o => o[0] == object) != undefined;
 }
 
 function updatePhysics(dt: number) {
@@ -90,14 +94,13 @@ function updatePhysics(dt: number) {
 
             let hit = [leftBottomDownHit, leftBottomUpHit, leftTopDownHit, leftTopUpHit, rightBottomDownHit, rightBottomUpHit, rightTopDownHit, rightTopUpHit];
             let hitElements = hit.filter(h => h[0] && (!h[3] || getElementType(h[3]) == 'vehicle'));
-            let hits = hit.filter(h => h[0]);
 
             if(hitElements.length != 0) {
                 let hit = hitElements[0];
                 let normal = hit[2].sub(hit[1]);
                 let length = normal.getLength();
                 normal.normalize();
-                let bounceVector = reflect(normal, hits[0][4]);
+                let bounceVector = reflect(normal, hitElements[0][4]);
                 let bounciness = getObjectBounciness(object[0].model);
 
                 let targetVelocity = velocity.mul(length / velocityLength);
@@ -110,11 +113,25 @@ function updatePhysics(dt: number) {
 
                 let angularVelocity = bounceVector.mul(velocityLength * bounciness * 0.4);
                 applyWorldHitAngularVelocitty(object[0], angularVelocity.x, angularVelocity.y, angularVelocity.z);
+                
+                if(hit[3] && doesObjectUsesPhysics(hit[3] as MTASAObject)) {
+                    let [vx, vy, vz] = getElementVelocity(hit[3]);
+                    let [ax, ay, az] = getElementAngularVelocity(hit[3]);
+                    let bounciness = getObjectBounciness(hit[3].model);
 
-                // let [ax, ay, az] = getElementAngularVelocity(object[0]);
-                // let angularVelocity = new Vector3(ax, ay, az);
-                // angularVelocity = angularVelocity.add(bounceVector.mul(velocityLength * bounciness * 0.2));
-                // setElementAngularVelocity(object[0], angularVelocity.x, angularVelocity.y, angularVelocity.z);
+                    let velocity = new Vector3(vx, vy, vz);
+                    let velocityLength = velocity.getLength();
+                    
+                    let targetVelocity = velocity.add(bounceVector.mul(velocityLength * bounciness * -0.4));
+                    if(targetVelocity.getLength() > velocityLength * bounciness) {
+                        targetVelocity = targetVelocity.mul(velocityLength * bounciness / targetVelocity.getLength());
+                    }
+
+                    setElementVelocity(hit[3], targetVelocity.x, targetVelocity.y, targetVelocity.z);
+
+                    let angularVelocity = bounceVector.mul(velocityLength * bounciness * -0.4);
+                    applyWorldHitAngularVelocitty(hit[3] as MTASAObject, angularVelocity.x, angularVelocity.y, angularVelocity.z);
+                }
             }
         }
     }
