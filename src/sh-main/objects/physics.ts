@@ -38,6 +38,11 @@ function processLine(start: Vector3, target: Vector3, ignored: MTASAObject): [bo
     return [hit, start, new Vector3(hitX, hitY, hitZ), hitElement, new Vector3(normalX, normalY, normalZ)];
 }
 
+function applyWorldHitAngularVelocitty(object: MTASAObject, x: number, y: number, z: number) {
+    let [ax, ay, az] = getElementAngularVelocity(object);
+    setElementAngularVelocity(object, ax - y, ay + x, az);
+}
+
 function updatePhysics(dt: number) {
     for(let object of physicsObjects) {
         let velocity = object[0].velocity.mul(dt / 10);
@@ -103,10 +108,13 @@ function updatePhysics(dt: number) {
 
                 setElementVelocity(object[0], targetVelocity.x, targetVelocity.y, targetVelocity.z);
 
-                let [ax, ay, az] = getElementAngularVelocity(object[0]);
-                let angularVelocity = new Vector3(ax, ay, az);
-                angularVelocity = angularVelocity.add(bounceVector.mul(velocityLength * bounciness * 0.2));
-                setElementAngularVelocity(object[0], angularVelocity.x, angularVelocity.y, angularVelocity.z);
+                let angularVelocity = bounceVector.mul(velocityLength * bounciness * 0.4);
+                applyWorldHitAngularVelocitty(object[0], angularVelocity.x, angularVelocity.y, angularVelocity.z);
+
+                // let [ax, ay, az] = getElementAngularVelocity(object[0]);
+                // let angularVelocity = new Vector3(ax, ay, az);
+                // angularVelocity = angularVelocity.add(bounceVector.mul(velocityLength * bounciness * 0.2));
+                // setElementAngularVelocity(object[0], angularVelocity.x, angularVelocity.y, angularVelocity.z);
             }
         }
     }
